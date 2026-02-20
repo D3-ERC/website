@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTIS — Decentralized Trustworthy Intelligent Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f7f4;
+    --ink: #0d0d0b;
+    --ink-soft: #5a5a54;
+    --accent: #1a3aff;
+    --accent-light: #e8eeff;
+    --mono: 'DM Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --border: rgba(13,13,11,0.1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 4rem;
+    background: rgba(248,247,244,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--ink);
+    color: var(--bg) !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2px;
+    color: var(--bg);
+  }
+  .nav-cta:hover { background: var(--accent); color: var(--bg) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    gap: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(26,58,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.35s forwards;
+  }
+  .hero-title .line2 { color: var(--accent); }
+
+  .hero-desc {
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; align-items: center;
+    opacity: 0; animation: fadeUp 0.8s 0.65s forwards;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 0.9rem 2rem;
+    border-radius: 2px;
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--accent); }
+
+  .btn-ghost {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--accent); }
+  .btn-ghost::after { content: '→'; }
+
+  /* Hero visual */
+  .hero-visual {
+    opacity: 0; animation: fadeIn 1.2s 0.5s forwards;
+    position: relative;
+  }
+
+  .network-viz {
+    position: relative;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 1rem;
+    border: 1px solid var(--border);
+  }
+  .network-viz svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .network-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 35%, rgba(26,58,255,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .conn-line {
+    stroke-dasharray: 4 3;
+    animation: dash-flow 3s linear infinite;
+  }
+  @keyframes dash-flow {
+    from { stroke-dashoffset: 28; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  .grid-stats {
+    display: flex; gap: 2rem; margin-top: 1.5rem;
+    padding: 0 0.5rem;
+  }
+  .stat-item { flex: 1; }
+  .stat-val {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .stat-label { font-size: 11px; color: var(--ink-soft); letter-spacing: 0.05em; }
+
+  /* FEATURES */
+  .features {
+    padding: 8rem 4rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-label::before {
+    content: '//'; color: var(--accent); font-family: var(--mono);
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 3.5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .section-desc { max-width: 300px; color: var(--ink-soft); font-size: 13px; }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+  }
+  .features-grid .feature-card:nth-child(3n) { border-right: none; }
+
+  .feature-card {
+    padding: 3rem 2.5rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .feature-card:nth-child(3n) { border-right: none; }
+  .feature-card:hover { background: var(--accent-light); }
+
+  .feature-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    filter: grayscale(0.3);
+  }
+
+  .feature-num {
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--accent); font-family: var(--mono);
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  .feature-body { color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+
+  .erc-logo-row {
+    margin-bottom: 2rem;
+  }
+  .erc-logo-img {
+    height: 72px;
+    width: auto;
+    display: block;
+    background: #fff;
+    padding: 0.6rem 1rem;
+    border-radius: 3px;
+  }
+  .grant-highlight {
+    background: rgba(26,58,255,0.08);
+    border-left: 2px solid var(--accent);
+    padding-left: calc(3rem - 2px);
+  }
+  .ms-grant {
+    font-size: 10px !important;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.25rem 0.4rem;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    height: fit-content;
+    margin-top: 2px;
+    min-width: 50px;
+    text-align: center;
+  }
+  .ms-grant-name {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ERC PROJECT */
+  .erc {
+    padding: 8rem 4rem;
+    background: var(--ink);
+    color: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .erc::before {
+    content: 'ERC';
+    position: absolute;
+    right: -2rem; top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--display);
+    font-size: 20rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -0.05em;
+  }
+
+  .erc .section-label { color: rgba(248,247,244,0.4); }
+  .erc .section-label::before { color: var(--accent); }
+  .erc .section-title { color: var(--bg); }
+
+  .erc-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+    margin-top: 5rem;
+  }
+
+  .erc-body { color: rgba(248,247,244,0.65); line-height: 1.9; font-size: 14px; }
+  .erc-body p + p { margin-top: 1.2rem; }
+
+  .erc-highlight {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+  }
+
+  .erc-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2.5rem;
+  }
+  .erc-tag {
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.35rem 0.9rem;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+  }
+  .erc-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  .erc-milestones {
+    border-left: 1px solid rgba(255,255,255,0.1);
+    padding-left: 3rem;
+  }
+
+  .milestone {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .milestone:last-child { border-bottom: none; }
+
+  .ms-year {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    min-width: 50px;
+    padding-top: 2px;
+  }
+
+  .ms-content {}
+  .ms-title {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--bg);
+  }
+  .ms-desc { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+
+  /* CONTACT / CTA */
+  .contact {
+    padding: 8rem 4rem;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: center;
+  }
+
+  .contact-title {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    margin-bottom: 1.5rem;
+  }
+  .contact-title span { color: var(--accent); }
+  .contact-sub { color: var(--ink-soft); line-height: 1.8; margin-bottom: 2rem; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  input, textarea, select {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 0.85rem 1rem;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  input:focus, textarea:focus { border-color: var(--accent); }
+  input::placeholder, textarea::placeholder { color: var(--ink-soft); }
+
+  textarea { resize: none; height: 120px; }
+
+  .btn-submit {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 1rem 2rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+    align-self: flex-start;
+  }
+  .btn-submit:hover { background: var(--ink); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy { font-size: 12px; color: var(--ink-soft); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 11px; color: var(--ink-soft); text-decoration: none; letter-spacing: 0.05em; }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* USE CASES */
+  .usecases {
+    padding: 8rem 4rem;
+    border-top: 1px solid var(--border);
+  }
+  .uc-tabs {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-bottom: 0;
+    width: fit-content;
+  }
+  .uc-tab {
+    padding: 0.75rem 1.8rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .uc-tab:last-child { border-right: none; }
+  .uc-tab:hover { color: var(--accent); background: var(--accent-light); }
+  .uc-tab.active {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .uc-panels {
+    border: 1px solid var(--border);
+    border-top: none;
+  }
+  .uc-panel {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .uc-panel.active { display: grid; }
+  .uc-panel-main {
+    padding: 4rem;
+    border-right: 1px solid var(--border);
+  }
+  .uc-panel-aside {
+    padding: 4rem;
+    background: rgba(13,13,11,0.02);
+  }
+  .uc-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .uc-title {
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 1.25rem;
+  }
+  .uc-desc {
+    color: var(--ink-soft);
+    font-size: 13px;
+    line-height: 1.85;
+    margin-bottom: 2rem;
+  }
+  .uc-challenges {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .uc-challenges li {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    line-height: 1.6;
+  }
+  .uc-challenges li:last-child { border-bottom: none; }
+  .uc-challenges li::before {
+    content: '→';
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .uc-solutions-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .uc-solutions-label::before { content: '//'; color: var(--accent); }
+  .uc-solution-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .uc-solution-card {
+    border: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+    border-radius: 2px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .uc-solution-card:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .uc-solution-title {
+    font-family: var(--display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.01em;
+  }
+  .uc-solution-body {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  /* TEAM */
+  .team {
+    padding: 8rem 4rem;
+    border-top: 1px solid var(--border);
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .team-card {
+    background: var(--bg);
+    padding: 2.5rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    transition: background 0.3s;
+  }
+  .team-card:hover { background: var(--accent-light); }
+  .team-avatar {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 2px;
+    background: var(--ink);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .team-name {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.2rem;
+  }
+  .team-role {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.2rem;
+  }
+  .team-affil {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.03em;
+  }
+  .team-bio {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.75;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; }
+    .features { padding: 5rem 2rem; }
+    .features-grid { grid-template-columns: 1fr; }
+    .feature-card { border-right: none; }
+    .erc { padding: 5rem 2rem; }
+    .erc-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .erc-milestones { border-left: none; padding-left: 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
+    .contact { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .team { padding: 5rem 2rem; }
+    .team-grid { grid-template-columns: 1fr; }
+    .usecases { padding: 5rem 2rem; }
+    .uc-tabs { width: 100%; flex-direction: column; }
+    .uc-tab { border-right: none; border-bottom: 1px solid var(--border); }
+    .uc-panel.active { grid-template-columns: 1fr; }
+    .uc-panel-main { border-right: none; border-bottom: 1px solid var(--border); padding: 2rem; }
+    .uc-panel-aside { padding: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>D</span>TIS</a>
+  <ul class="nav-links">
+    <li><a href="#features">Services</a></li>
+    <li><a href="#usecases">Use Cases</a></li>
+    <li><a href="#erc">ERC Research</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Decentralized Confidential Cloud Computing</p>
+    <h1 class="hero-title">
+      Decentralized<br>
+      <span class="line2">Trustworthy</span><br>
+      Intelligent<br>
+      Services
+    </h1>
+    <p class="hero-desc">Next-generation decentralized confidential cloud computing infrastructure — where trustworthy, policy-compliant, and agentic AI systems operate with hardware-assured security across a distributed, peer-to-peer cloud with no central operator.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Request Access</a>
+      <a href="#features" class="btn-ghost">Explore Services</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="network-viz">
+      <svg id="network-svg" viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg" style="background:#fff;">
+        <!-- Connection lines -->
+        <g class="connections" stroke="rgba(26,58,255,0.18)" stroke-width="1" fill="none">
+          <line x1="240" y1="90"  x2="100" y2="55"  class="conn-line" />
+          <line x1="240" y1="90"  x2="380" y2="60"  class="conn-line" />
+          <line x1="240" y1="90"  x2="80"  y2="180" class="conn-line" />
+          <line x1="240" y1="90"  x2="400" y2="175" class="conn-line" />
+          <line x1="240" y1="90"  x2="160" y2="240" class="conn-line" />
+          <line x1="240" y1="90"  x2="320" y2="248" class="conn-line" />
+          <line x1="100" y1="55"  x2="80"  y2="180" class="conn-line" />
+          <line x1="380" y1="60"  x2="400" y2="175" class="conn-line" />
+          <line x1="80"  y1="180" x2="160" y2="240" class="conn-line" />
+          <line x1="400" y1="175" x2="320" y2="248" class="conn-line" />
+          <line x1="100" y1="55"  x2="160" y2="240" class="conn-line" />
+          <line x1="380" y1="60"  x2="320" y2="248" class="conn-line" />
+          <line x1="160" y1="240" x2="320" y2="248" class="conn-line" />
+        </g>
+
+        <!-- Data packets animating along connections -->
+        <circle r="3" fill="#1a3aff" opacity="0.7">
+          <animateMotion dur="2.8s" repeatCount="indefinite" begin="0s">
+            <mpath href="#path-c1"/>
+          </animateMotion>
+        </circle>
+        <circle r="3" fill="#1a3aff" opacity="0.7">
+          <animateMotion dur="3.2s" repeatCount="indefinite" begin="0.8s">
+            <mpath href="#path-c2"/>
+          </animateMotion>
+        </circle>
+        <circle r="3" fill="#1a3aff" opacity="0.7">
+          <animateMotion dur="2.5s" repeatCount="indefinite" begin="1.5s">
+            <mpath href="#path-c3"/>
+          </animateMotion>
+        </circle>
+        <circle r="3" fill="#1a3aff" opacity="0.5">
+          <animateMotion dur="3.6s" repeatCount="indefinite" begin="0.3s">
+            <mpath href="#path-c4"/>
+          </animateMotion>
+        </circle>
+
+        <!-- Hidden paths for packet animation -->
+        <defs>
+          <path id="path-c1" d="M240,90 L100,55"/>
+          <path id="path-c2" d="M80,180 L240,90"/>
+          <path id="path-c3" d="M240,90 L320,248"/>
+          <path id="path-c4" d="M380,60 L400,175"/>
+        </defs>
+
+        <!-- Central hub node -->
+        <g transform="translate(240,90)">
+          <circle r="32" fill="#fff" stroke="#1a3aff" stroke-width="2"/>
+          <circle r="32" fill="none" stroke="#1a3aff" stroke-width="1.5" opacity="0.4">
+            <animate attributeName="r" values="32;44;32" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.4;0;0.4" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+          <!-- Cloud icon -->
+          <path d="M-12,4 C-14,4 -16,2 -16,0 C-16,-3 -13,-5 -10,-4 C-10,-8 -7,-11 -3,-11 C1,-11 4,-8 4,-5 C6,-6 9,-5 10,-3 C12,-1 11,4 8,4 Z" fill="#1a3aff" opacity="0.9"/>
+          <text y="22" text-anchor="middle" fill="rgba(26,58,255,0.8)" font-family="DM Mono,monospace" font-size="7" letter-spacing="0.08em">CORE</text>
+        </g>
+
+        <!-- Node: top-left -->
+        <g transform="translate(100,55)">
+          <!-- Main node circle -->
+          <circle r="26" fill="#fff" stroke="#1a3aff" stroke-width="1.8"/>
+          <circle r="26" fill="none" stroke="#1a3aff" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0.3;0" dur="3.1s" repeatCount="indefinite" begin="0.6s"/>
+            <animate attributeName="r" values="26;38;26" dur="3.1s" repeatCount="indefinite" begin="0.6s"/>
+          </circle>
+          <!-- AI Agent logo: stylised brain/circuit -->
+          <circle cx="0" cy="-4" r="9" fill="none" stroke="#1a3aff" stroke-width="1.3"/>
+          <line x1="-5" y1="-4" x2="5" y2="-4" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <line x1="0" y1="-9" x2="0" y2="1" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <circle cx="-4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="-4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <text y="12" text-anchor="middle" fill="#1a3aff" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em" font-weight="500">AI AGENT</text>
+          <!-- Provable security seal: small circle badge bottom-right -->
+          <g transform="translate(18,16)">
+            <circle r="10" fill="#1a3aff"/>
+            <path d="M0,-5 L4,-2.5 L4,1.5 C4,3.5 2,5.5 0,6.5 C-2,5.5 -4,3.5 -4,1.5 L-4,-2.5 Z" fill="#fff" opacity="0.95" transform="scale(0.72)"/>
+            <path d="M-2.5,1 L-0.5,2.8 L3,-1.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,0.5)"/>
+          </g>
+          <text y="44" text-anchor="middle" fill="rgba(13,13,11,0.3)" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em">node_01</text>
+        </g>
+
+        <!-- Node: top-right -->
+        <g transform="translate(380,60)">
+          <circle r="26" fill="#fff" stroke="#1a3aff" stroke-width="1.8"/>
+          <circle r="26" fill="none" stroke="#1a3aff" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0.3;0" dur="2.7s" repeatCount="indefinite" begin="1.2s"/>
+            <animate attributeName="r" values="26;38;26" dur="2.7s" repeatCount="indefinite" begin="1.2s"/>
+          </circle>
+          <circle cx="0" cy="-4" r="9" fill="none" stroke="#1a3aff" stroke-width="1.3"/>
+          <line x1="-5" y1="-4" x2="5" y2="-4" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <line x1="0" y1="-9" x2="0" y2="1" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <circle cx="-4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="-4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <text y="12" text-anchor="middle" fill="#1a3aff" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em" font-weight="500">AI AGENT</text>
+          <g transform="translate(18,16)">
+            <circle r="10" fill="#1a3aff"/>
+            <path d="M0,-5 L4,-2.5 L4,1.5 C4,3.5 2,5.5 0,6.5 C-2,5.5 -4,3.5 -4,1.5 L-4,-2.5 Z" fill="#fff" opacity="0.95" transform="scale(0.72)"/>
+            <path d="M-2.5,1 L-0.5,2.8 L3,-1.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,0.5)"/>
+          </g>
+          <text y="44" text-anchor="middle" fill="rgba(13,13,11,0.3)" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em">node_02</text>
+        </g>
+
+        <!-- Node: left -->
+        <g transform="translate(80,180)">
+          <circle r="26" fill="#fff" stroke="#1a3aff" stroke-width="1.8"/>
+          <circle r="26" fill="none" stroke="#1a3aff" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0.25;0" dur="3.4s" repeatCount="indefinite" begin="0.2s"/>
+            <animate attributeName="r" values="26;38;26" dur="3.4s" repeatCount="indefinite" begin="0.2s"/>
+          </circle>
+          <circle cx="0" cy="-4" r="9" fill="none" stroke="#1a3aff" stroke-width="1.3"/>
+          <line x1="-5" y1="-4" x2="5" y2="-4" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <line x1="0" y1="-9" x2="0" y2="1" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <circle cx="-4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="-4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <text y="12" text-anchor="middle" fill="#1a3aff" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em" font-weight="500">AI AGENT</text>
+          <g transform="translate(18,16)">
+            <circle r="10" fill="#1a3aff"/>
+            <path d="M0,-5 L4,-2.5 L4,1.5 C4,3.5 2,5.5 0,6.5 C-2,5.5 -4,3.5 -4,1.5 L-4,-2.5 Z" fill="#fff" opacity="0.95" transform="scale(0.72)"/>
+            <path d="M-2.5,1 L-0.5,2.8 L3,-1.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,0.5)"/>
+          </g>
+          <text y="44" text-anchor="middle" fill="rgba(13,13,11,0.3)" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em">node_03</text>
+        </g>
+
+        <!-- Node: right -->
+        <g transform="translate(400,175)">
+          <circle r="26" fill="#fff" stroke="#1a3aff" stroke-width="1.8"/>
+          <circle r="26" fill="none" stroke="#1a3aff" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0.25;0" dur="2.9s" repeatCount="indefinite" begin="1.8s"/>
+            <animate attributeName="r" values="26;38;26" dur="2.9s" repeatCount="indefinite" begin="1.8s"/>
+          </circle>
+          <circle cx="0" cy="-4" r="9" fill="none" stroke="#1a3aff" stroke-width="1.3"/>
+          <line x1="-5" y1="-4" x2="5" y2="-4" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <line x1="0" y1="-9" x2="0" y2="1" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <circle cx="-4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="-4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <text y="12" text-anchor="middle" fill="#1a3aff" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em" font-weight="500">AI AGENT</text>
+          <g transform="translate(18,16)">
+            <circle r="10" fill="#1a3aff"/>
+            <path d="M0,-5 L4,-2.5 L4,1.5 C4,3.5 2,5.5 0,6.5 C-2,5.5 -4,3.5 -4,1.5 L-4,-2.5 Z" fill="#fff" opacity="0.95" transform="scale(0.72)"/>
+            <path d="M-2.5,1 L-0.5,2.8 L3,-1.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,0.5)"/>
+          </g>
+          <text y="44" text-anchor="middle" fill="rgba(13,13,11,0.3)" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em">node_04</text>
+        </g>
+
+        <!-- Node: bottom-left -->
+        <g transform="translate(160,248)">
+          <circle r="26" fill="#fff" stroke="#1a3aff" stroke-width="1.8"/>
+          <circle r="26" fill="none" stroke="#1a3aff" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0.25;0" dur="3.8s" repeatCount="indefinite" begin="0.9s"/>
+            <animate attributeName="r" values="26;38;26" dur="3.8s" repeatCount="indefinite" begin="0.9s"/>
+          </circle>
+          <circle cx="0" cy="-4" r="9" fill="none" stroke="#1a3aff" stroke-width="1.3"/>
+          <line x1="-5" y1="-4" x2="5" y2="-4" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <line x1="0" y1="-9" x2="0" y2="1" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <circle cx="-4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="-4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <text y="12" text-anchor="middle" fill="#1a3aff" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em" font-weight="500">AI AGENT</text>
+          <g transform="translate(18,16)">
+            <circle r="10" fill="#1a3aff"/>
+            <path d="M0,-5 L4,-2.5 L4,1.5 C4,3.5 2,5.5 0,6.5 C-2,5.5 -4,3.5 -4,1.5 L-4,-2.5 Z" fill="#fff" opacity="0.95" transform="scale(0.72)"/>
+            <path d="M-2.5,1 L-0.5,2.8 L3,-1.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,0.5)"/>
+          </g>
+          <text y="44" text-anchor="middle" fill="rgba(13,13,11,0.3)" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em">node_05</text>
+        </g>
+
+        <!-- Node: bottom-right -->
+        <g transform="translate(320,248)">
+          <circle r="26" fill="#fff" stroke="#1a3aff" stroke-width="1.8"/>
+          <circle r="26" fill="none" stroke="#1a3aff" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0.25;0" dur="3.0s" repeatCount="indefinite" begin="2.1s"/>
+            <animate attributeName="r" values="26;38;26" dur="3.0s" repeatCount="indefinite" begin="2.1s"/>
+          </circle>
+          <circle cx="0" cy="-4" r="9" fill="none" stroke="#1a3aff" stroke-width="1.3"/>
+          <line x1="-5" y1="-4" x2="5" y2="-4" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <line x1="0" y1="-9" x2="0" y2="1" stroke="#1a3aff" stroke-width="1" opacity="0.7"/>
+          <circle cx="-4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-7" r="1.2" fill="#1a3aff"/>
+          <circle cx="-4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <circle cx="4" cy="-1" r="1.2" fill="#1a3aff"/>
+          <text y="12" text-anchor="middle" fill="#1a3aff" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em" font-weight="500">AI AGENT</text>
+          <g transform="translate(18,16)">
+            <circle r="10" fill="#1a3aff"/>
+            <path d="M0,-5 L4,-2.5 L4,1.5 C4,3.5 2,5.5 0,6.5 C-2,5.5 -4,3.5 -4,1.5 L-4,-2.5 Z" fill="#fff" opacity="0.95" transform="scale(0.72)"/>
+            <path d="M-2.5,1 L-0.5,2.8 L3,-1.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,0.5)"/>
+          </g>
+          <text y="44" text-anchor="middle" fill="rgba(13,13,11,0.3)" font-family="DM Mono,monospace" font-size="5.5" letter-spacing="0.06em">node_06</text>
+        </g>
+
+        <!-- Status label -->
+        <g transform="translate(240,305)">
+          <rect x="-95" y="-9" width="190" height="16" rx="2" fill="rgba(26,58,255,0.06)" stroke="rgba(26,58,255,0.2)" stroke-width="0.5"/>
+          <circle r="3" cx="-83" cy="-1" fill="#1a3aff">
+            <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/>
+          </circle>
+          <text x="-75" y="3" fill="rgba(26,58,255,0.7)" font-family="DM Mono,monospace" font-size="7" letter-spacing="0.08em">6 NODES · HW-SEC · PROVEN ✓</text>
+        </g>
+      </svg>
+
+      <div class="network-bg"></div>
+    </div>
+    <div class="grid-stats">
+      <div class="stat-item">
+        <div class="stat-val">TEE</div>
+        <div class="stat-label">Confidential Compute</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">P2P</div>
+        <div class="stat-label">Decentralized Cloud</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">Agentic</div>
+        <div class="stat-label">By Design</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES / SERVICES -->
+<section class="features" id="features">
+  <div class="section-header">
+    <div>
+      <p class="section-label">What We Build</p>
+      <h2 class="section-title">Services &<br>Capabilities</h2>
+    </div>
+    <p class="section-desc">The building blocks of decentralized confidential cloud computing — hardware-secured, regulation-aware, and built for trustworthy agentic AI.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">⬕</span>
+      <p class="feature-num">01</p>
+      <h3 class="feature-title">Hardware-Assured Security</h3>
+      <p class="feature-body">Trusted Execution Environments (TEEs), confidential virtual machines, and hardware-enforced sandboxing guarantee data confidentiality and code integrity at the silicon level. Each service runs in an isolated enclave — verifiably protected even across untrusted cloud nodes, third-party operators, and shared multi-tenant infrastructure. No trust assumptions required.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">◧</span>
+      <p class="feature-num">02</p>
+      <h3 class="feature-title">Policy-Compliant by Design</h3>
+      <p class="feature-body">A declarative policy language that bridges legal text and executable runtime constraints — encoding GDPR, EU AI Act, and organizational rules as machine-readable, human-auditable policies. Automated compliance enforcement is verifiably applied at the compute layer, closing the gap between regulation and technical execution.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">◈</span>
+      <p class="feature-num">03</p>
+      <h3 class="feature-title">Secure Storage System</h3>
+      <p class="feature-body">Encrypted-at-rest, access-controlled storage with fine-grained data governance. Integrity-verified, policy-bound storage that ensures sensitive data is only ever accessible under verified, attested conditions.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⟳</span>
+      <p class="feature-num">04</p>
+      <h3 class="feature-title">Trustworthy AI Agent</h3>
+      <p class="feature-body">Autonomous AI agents that are verifiably safe, policy-bound, and auditable by design. Running inside confidential enclaves, every agent action is hardware-attested, regulation-compliant, and constrained by declarative policies — guaranteeing trustworthy behaviour from planning to execution.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">◫</span>
+      <p class="feature-num">05</p>
+      <h3 class="feature-title">Confidential Nested Virtualization</h3>
+      <p class="feature-body">Lightweight nested VM isolation that preserves hardware-level confidentiality guarantees across virtualization layers. Run isolated confidential workloads inside existing cloud VMs — with minimal overhead and full TEE attestation at every nesting level.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">◎</span>
+      <p class="feature-num">06</p>
+      <h3 class="feature-title">Provable Security</h3>
+      <p class="feature-body">End-to-end security guarantees that go beyond declaration — mathematically and cryptographically provable. Remote attestation verifies the integrity of hardware, firmware, and software before any workload executes. Accountability mechanisms ensure every action is traceable to a verified identity. Full auditability means every computation, decision, and data access is logged, attested, and inspectable — across the entire decentralized stack.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ERC PROJECT -->
+<section class="erc" id="erc">
+  <div>
+    <p class="section-label">ERC Research</p>
+    <h2 class="section-title">ERC Research</h2>
+  </div>
+
+  <div class="erc-layout">
+    <div>
+      <div class="erc-logo-row">
+        <img class="erc-logo-img" src="data:image/png;base64,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" alt="Funded by the European Union / European Research Council">
+      </div>
+      <p class="erc-highlight">Two ERC Grants. One Mission: Decentralized Confidential Cloud Computing for Trustworthy AI.</p>
+      <div class="erc-body">
+        <p>DTIS is backed by two prestigious European Research Council grants, together forming a comprehensive research programme at the frontier of decentralized confidential cloud computing and dependable AI systems.</p>
+        <p>Our work spans the full stack — from operating system primitives for decentralized environments to production-grade networking architectures built for dependability — underpinned by hardware-assured security and policy-compliant AI throughout.</p>
+        <p>All findings, specifications, and tooling are committed to open science and will be released to the broader academic and engineering community.</p>
+      </div>
+      <div class="erc-tags">
+        <span class="erc-tag">GDPR & EU AI Act</span>
+        <span class="erc-tag">Declarative Policy Language</span>
+        <span class="erc-tag">Trusted Execution Environments</span>
+        <span class="erc-tag">Secure Storage</span>
+        <span class="erc-tag">Nested Virtualization</span>
+        <span class="erc-tag">Decentralized Cloud</span>
+        <span class="erc-tag">Trustworthy AI Agent</span>
+        <span class="erc-tag">Provable Security</span>
+        <span class="erc-tag">Remote Attestation</span>
+        <span class="erc-tag">Accountability</span>
+        <span class="erc-tag">Auditability</span>
+        <span class="erc-tag">Open Science</span>
+      </div>
+    </div>
+
+    <div class="erc-milestones">
+      <div class="milestone">
+        <span class="ms-year ms-grant" style="background:var(--accent);color:#fff;padding:0.25rem 0.4rem;border-radius:2px;font-size:10px;letter-spacing:0.05em;height:fit-content;margin-top:2px;min-width:50px;text-align:center;">StG</span>
+        <div class="ms-content">
+          <p class="ms-title">ERC Starting Grant — DOS</p>
+          <p class="ms-grant-name">Decentralized Operating Systems</p>
+          <p class="ms-desc">Foundational research into operating system primitives for decentralized, confidential computing — enabling trustworthy AI agents and policy enforcement at the system level.</p>
+        </div>
+      </div>
+      <div class="milestone grant-highlight">
+        <span class="ms-year ms-grant">PoC</span>
+        <div class="ms-content">
+          <p class="ms-title">ERC Proof of Concept Grant — DNA</p>
+          <p class="ms-grant-name">Dependable NIC Architecture</p>
+          <p class="ms-desc">Translating research into practice — a dependable NIC architecture for decentralized infrastructure with hardware-assured security and resilient, high-performance networking guarantees.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / CTA -->
+<section class="contact" id="contact">
+  <div>
+    <h2 class="contact-title">Let's build<br><span>trust</span><br>together.</h2>
+    <p class="contact-sub">Whether you're an enterprise exploring decentralized confidential cloud infrastructure, a researcher interested in TEE-based distributed systems, or an institution building the next generation of trustworthy AI — we'd like to hear from you.</p>
+    <p style="font-size:12px; color: var(--ink-soft); letter-spacing: 0.05em;">
+      <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="640c0108080b2400100d174a0d0b">[email&#160;protected]</a> &nbsp;·&nbsp; @dtis_network
+    </p>
+  </div>
+
+  <div>
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <input type="text" placeholder="Name" required>
+        <input type="email" placeholder="Email" required>
+      </div>
+      <input type="text" placeholder="Organisation">
+      <select>
+        <option value="" disabled selected>Area of Interest</option>
+        <option>Policy Compliance (GDPR / EU AI Act)</option>
+        <option>Hardware Security (TEE)</option>
+        <option>Provable Security & Attestation</option>
+        <option>Secure Storage System</option>
+        <option>Confidential Nested Virtualization</option>
+        <option>Trustworthy AI Agent</option>
+        <option>Decentralized Cloud</option>
+        <option>Research Collaboration</option>
+        <option>ERC Research Inquiry</option>
+        <option>Other</option>
+      </select>
+      <textarea placeholder="Tell us about your use case or inquiry..."></textarea>
+      <button type="submit" class="btn-submit">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="usecases" id="usecases">
+  <div class="section-header">
+    <div>
+      <p class="section-label">Applications</p>
+      <h2 class="section-title">Use Cases</h2>
+    </div>
+    <p class="section-desc">Decentralized confidential cloud computing deployed across high-stakes, regulated industries where data privacy and AI trust are non-negotiable.</p>
+  </div>
+
+  <div class="uc-tabs">
+    <button class="uc-tab active" onclick="switchTab('medicine', this)">Intelligent Medical Services</button>
+    <button class="uc-tab" onclick="switchTab('finance', this)">Intelligent Financial Services</button>
+    <button class="uc-tab" onclick="switchTab('law', this)">Intelligent Legal Services</button>
+  </div>
+
+  <div class="uc-panels">
+
+    <!-- MEDICINE -->
+    <div class="uc-panel active" id="uc-medicine">
+      <div class="uc-panel-main">
+        <span class="uc-icon">⚕</span>
+        <h3 class="uc-title">Trustworthy Intelligent Medical Services</h3>
+        <p class="uc-desc">Healthcare AI operates on the most sensitive data imaginable — patient records, genomic information, clinical histories. DTIS enables hospitals, research institutions, and health networks to deploy AI diagnostics, predictive models, and agentic clinical tools with hardware-guaranteed confidentiality and full GDPR compliance, even across multi-institutional collaborations.</p>
+        <p class="uc-solutions-label">Key Challenges Addressed</p>
+        <ul class="uc-challenges">
+          <li>Patient data must never leave compliant environments, even during AI inference and model training.</li>
+          <li>Multi-hospital AI collaboration requires sharing insights without exposing raw clinical records.</li>
+          <li>Autonomous clinical AI agents must operate under strict, verifiable policy constraints.</li>
+          <li>EU AI Act classifies medical AI as high-risk — demanding auditability and explainability.</li>
+        </ul>
+      </div>
+      <div class="uc-panel-aside">
+        <p class="uc-solutions-label">DTIS Solutions</p>
+        <div class="uc-solution-cards">
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Confidential AI Diagnostics</p>
+            <p class="uc-solution-body">Run diagnostic models inside TEE-secured enclaves — patient data is never exposed to the cloud operator or other tenants.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Federated Clinical Learning</p>
+            <p class="uc-solution-body">Train shared models across hospital networks using privacy-preserving federated learning, secured at each node by hardware attestation.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Policy-Bound Medical Agents</p>
+            <p class="uc-solution-body">Autonomous AI agents constrained by declarative policies encoding GDPR, medical ethics, and institutional guidelines — verifiably enforced at runtime.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Compliant Audit Trails</p>
+            <p class="uc-solution-body">Every AI decision is hardware-attested and logged — meeting EU AI Act high-risk requirements for transparency and auditability.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCE -->
+    <div class="uc-panel" id="uc-finance">
+      <div class="uc-panel-main">
+        <span class="uc-icon">◈</span>
+        <h3 class="uc-title">Trustworthy Intelligent Financial Services</h3>
+        <p class="uc-desc">Financial institutions process vast volumes of proprietary and client data while navigating dense regulatory landscapes. DTIS enables banks, asset managers, and fintech operators to deploy agentic AI for fraud detection, risk modelling, and automated decision-making — with hardware-assured security, regulatory compliance, and zero trust in the underlying cloud infrastructure.</p>
+        <p class="uc-solutions-label">Key Challenges Addressed</p>
+        <ul class="uc-challenges">
+          <li>Proprietary trading strategies and client portfolios cannot be exposed to cloud operators.</li>
+          <li>AI-driven financial decisions must be auditable for MiFID II, DORA, and GDPR regulators.</li>
+          <li>Multi-party risk models require cross-institution data collaboration without data sharing.</li>
+          <li>Autonomous trading and compliance agents must operate within strict, policy-enforced boundaries.</li>
+        </ul>
+      </div>
+      <div class="uc-panel-aside">
+        <p class="uc-solutions-label">DTIS Solutions</p>
+        <div class="uc-solution-cards">
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Confidential Risk Modelling</p>
+            <p class="uc-solution-body">Run proprietary risk and pricing models in TEE enclaves — outputs are verifiable while inputs remain cryptographically sealed.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Regulatory Audit Infrastructure</p>
+            <p class="uc-solution-body">Hardware-attested decision logs satisfy MiFID II and DORA auditability requirements without exposing sensitive model internals.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Cross-Institution Fraud Detection</p>
+            <p class="uc-solution-body">Collaborative fraud models trained across competing institutions using federated confidential learning — no raw transaction data ever shared.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Policy-Gated Autonomous Agents</p>
+            <p class="uc-solution-body">Compliance and trading agents constrained by machine-readable regulatory policies, enforced in hardware — reducing operational and legal risk.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAW -->
+    <div class="uc-panel" id="uc-law">
+      <div class="uc-panel-main">
+        <span class="uc-icon">⚖</span>
+        <h3 class="uc-title">Trustworthy Intelligent Legal Services</h3>
+        <p class="uc-desc">Legal AI handles the most confidential documents in existence — privileged communications, M&A negotiations, litigation strategy, and client contracts. DTIS allows law firms and legal tech platforms to deploy powerful AI research, drafting, and agentic legal workflows under ironclad attorney-client privilege guarantees and full regulatory compliance, without trusting any cloud provider.</p>
+        <p class="uc-solutions-label">Key Challenges Addressed</p>
+        <ul class="uc-challenges">
+          <li>Attorney-client privilege demands absolute confidentiality — cloud providers cannot be trusted with legal documents.</li>
+          <li>Cross-border legal work requires compliance with divergent data sovereignty and GDPR obligations.</li>
+          <li>Autonomous legal agents must operate within strict jurisdictional and ethical policy constraints.</li>
+          <li>AI-assisted legal decisions require explainability and auditability for professional liability.</li>
+        </ul>
+      </div>
+      <div class="uc-panel-aside">
+        <p class="uc-solutions-label">DTIS Solutions</p>
+        <div class="uc-solution-cards">
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Privilege-Protected AI Research</p>
+            <p class="uc-solution-body">Legal document analysis and case research in TEE enclaves — privileged content is hardware-sealed, never visible to the cloud operator.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Data Sovereignty Controls</p>
+            <p class="uc-solution-body">Declarative policies enforce data residency and cross-border transfer restrictions — automatically and verifiably, per jurisdiction.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Policy-Compliant Legal Agents</p>
+            <p class="uc-solution-body">Agentic AI for contract drafting and due diligence, constrained by firm-level and jurisdictional ethical policies — attested at every step.</p>
+          </div>
+          <div class="uc-solution-card">
+            <p class="uc-solution-title">Auditable AI Decisions</p>
+            <p class="uc-solution-body">Every AI-assisted legal output is hardware-attested and logged, supporting professional accountability and malpractice risk management.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team" id="team">
+  <div class="section-header">
+    <div>
+      <p class="section-label">Leadership</p>
+      <h2 class="section-title">The Team</h2>
+    </div>
+    <p class="section-desc">World-class researchers and engineers building the next generation of confidential computing infrastructure.</p>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">PB</div>
+      <div class="team-info">
+        <h3 class="team-name">Prof. Dr. Pramod Bhatotia</h3>
+        <p class="team-role">Chief Executive Officer</p>
+        <p class="team-affil">Technical University of Munich</p>
+        <p class="team-bio">Professor and Chair at TUM, leading research in distributed systems, operating systems, and confidential computing. Principal Investigator of the ERC Starting Grant DOS.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">DS</div>
+      <div class="team-info">
+        <h3 class="team-name">Dr. Dimitrios Stavrakakis</h3>
+        <p class="team-role">Chief Operating Officer</p>
+        <p class="team-affil">DTIS</p>
+        <p class="team-bio">Systems researcher specialising in decentralized infrastructure and dependable networking. Driving operational excellence and research translation across DTIS programmes.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">MM</div>
+      <div class="team-info">
+        <h3 class="team-name">Dr. Masanori Misono</h3>
+        <p class="team-role">Chief Technology Officer</p>
+        <p class="team-affil">DTIS</p>
+        <p class="team-bio">Expert in Trusted Execution Environments, confidential computing, and systems security. Leads the technical architecture of the DTIS platform and hardware-security stack.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">TS</div>
+      <div class="team-info">
+        <h3 class="team-name">Thore Sommer</h3>
+        <p class="team-role">Director of Engineering</p>
+        <p class="team-affil">DTIS</p>
+        <p class="team-bio">Leads the engineering team building DTIS's confidential cloud infrastructure. Specialises in systems engineering, secure virtualization, and large-scale distributed deployments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><span>D</span>TIS</div>
+  <p class="footer-copy">© 2026 DTIS. Decentralized Confidential Cloud Computing.</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Research</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function switchTab(id, btn) {
+    document.querySelectorAll('.uc-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.uc-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('uc-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = 'Sent ✓';
+    btn.style.background = '#1a3aff';
+    setTimeout(() => {
+      btn.textContent = 'Send Message →';
+      btn.style.background = '';
+      e.target.reset();
+    }, 3000);
+  }
+
+  // Scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .milestone, .erc-highlight, .team-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
